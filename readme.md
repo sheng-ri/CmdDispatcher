@@ -15,21 +15,26 @@ dispatcher.dispatcher("kill water you");
 
 ### Summary
 ```text
-kill (map)
+root (map)
+|            \
+kill (map)  kill(cmd)
 |
 water (cmd)
 ```
-Dispatcher always found cmd then execute.  
-If `kill` is a `cmd`, it will execute and always ignore `sub cmd`.
-
+Dispatcher always try to find the deepest command.
+If cmd is 'kill water', it will found `root`-`kill(map)`-`water`
+If cmd is `kill other`, it will found `root`-`kill(cmd)`
 ### CmdDispatcher
 简单树形命令Dispatcher
 
 ### Summary
 ```text
-kill (map)
+root (map)
+|            \
+kill (map)  kill(cmd)
 |
 water (cmd)
 ```
-Dispatcher找到命令就直接进行执行，  
-如果`kill`也是`命令`，那么`kill`的`子命令`会被忽略。
+Dispatcher总是尝试寻找最深的命令。
+如果命令是 'kill water', 它会找到 `root`-`kill(map)`-`water`
+如果命令是 `kill other`, 它会找到 `root`-`kill(cmd)`
