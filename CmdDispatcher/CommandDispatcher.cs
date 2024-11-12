@@ -2,13 +2,10 @@
 
 namespace CmdDispatcher;
 
-public partial class CommandDispatcher
+public class CommandDispatcher
 {
     private readonly CommandMap rootMap = new();
-    private Regex space = SpaceRegex();
-    
-    [GeneratedRegex(@"\s+", RegexOptions.Compiled)]
-    private static partial Regex SpaceRegex();
+    private readonly Regex space = new(@"\s+", RegexOptions.Compiled);
     
     public bool? dispatcher(string cmdStr)
     {
