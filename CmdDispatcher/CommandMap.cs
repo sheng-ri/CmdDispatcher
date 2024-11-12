@@ -7,38 +7,30 @@ public class CommandMap
 
     public Command? resolve(int idx, string[] cmds, out string[]? args)
     {
+        args = null;
         if (idx == cmds.Length)
-        {
-            args = null;
             return null;
-        }
-        
+
         var cmdStr = cmds[idx];
         if (InnerMap.TryGetValue(cmdStr, out var cmdMap))
         {
             var subResolve = cmdMap.resolve(idx + 1, cmds, out args);
             if (subResolve != null)
-            {
                 return subResolve;
-            }
         }
-        
-        if (Cmds.TryGetValue(cmdStr, out var cmd))
+
+        if (!Cmds.TryGetValue(cmdStr, out var cmd))
+            return null;
+
+        var len = cmds.Length - idx - 1;
+        if (len == 0) args = [];
+        else
         {
-            var len = cmds.Length - idx - 1;
-            if (len == 0) args = [];
-            else
-            {
-                args = new string[len];
-                Array.Copy(cmds, idx + 1, args, 0, len);
-            }
-
-            return cmd;
+            args = new string[len];
+            Array.Copy(cmds, idx + 1, args, 0, len);
         }
 
-
-        args = null;
-        return null;
+        return cmd;
     }
 
     public void register(int idx, string[] cmds, CommandExecutor executor)
@@ -58,12 +50,12 @@ public class CommandMap
 
         if (InnerMap.TryGetValue(cmdStr, out var newCmd))
         {
-            newCmd.register(idx + 1,cmds,executor);
+            newCmd.register(idx + 1, cmds, executor);
         }
         else
         {
             var map = InnerMap[cmdStr] = new CommandMap();
-            map.register(idx + 1,cmds,executor);
+            map.register(idx + 1, cmds, executor);
         }
     }
 }
