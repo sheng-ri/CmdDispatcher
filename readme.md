@@ -5,25 +5,25 @@ tree hierarchy command dispatcher.
 [TestMain.cs](CmdDispatcher/Test/TestMain.cs)
 ```csharp
 var dispatcher = new CommandDispatcher();
-dispatcher.register("kill water",(cmd, cmds, args) =>
+dispatcher.register("par sub",(cmd, cmds, args) =>
 {
     Console.WriteLine(cmd.name);
     return true;
 });
-dispatcher.dispatcher("kill water you");
+dispatcher.dispatcher("par sub arg");
 ```
 
 ### Summary
 ```text
 root (map)
 |            \
-kill (map)  kill(cmd)
+par (map)  par(cmd)
 |
-water (cmd)
+sub (cmd)
 ```
 Dispatcher always try to find the deepest command.  
-If cmd is 'kill water', it will found `root`-`kill(map)`-`water`  
-If cmd is `kill other`, it will found `root`-`kill(cmd)`
+If cmd is `par sub`, it will found `root`-`par(map)`-`sub`  
+If cmd is `par child`, it will found `root`-`par(cmd)`
 ### CmdDispatcher
 简单树形命令Dispatcher
 
@@ -31,10 +31,10 @@ If cmd is `kill other`, it will found `root`-`kill(cmd)`
 ```text
 root (map)
 |            \
-kill (map)  kill(cmd)
+par (map)  par(cmd)
 |
-water (cmd)
+sub (cmd)
 ```
 Dispatcher总是尝试寻找最深的命令。  
-如果命令是 'kill water', 它会找到 `root`-`kill(map)`-`water`  
-如果命令是 `kill other`, 它会找到 `root`-`kill(cmd)`
+如果命令是 `par sub` 它会找到 `root`-`par(map)`-`sub`  
+如果命令是 `par child`, 它会找到 `root`-`par(cmd)`
