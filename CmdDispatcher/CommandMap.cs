@@ -33,29 +33,30 @@ public class CommandMap
         return cmd;
     }
 
-    public void register(int idx, string[] cmds, CommandExecutor executor)
+    public bool register(int idx, string[] cmds, CommandExecutor executor)
     {
         var cmdStr = cmds[idx];
-        if (Cmds.TryGetValue(cmdStr, out var cmd))
-        {
-            cmd.executor = executor;
-            return;
-        }
 
         if (idx + 1 == cmds.Length)
         {
             Cmds[cmdStr] = new Command(cmdStr, executor);
-            return;
+            return true;
         }
 
-        if (InnerMap.TryGetValue(cmdStr, out var newCmd))
+        if (!InnerMap.TryGetValue(cmdStr, out var map))
         {
-            newCmd.register(idx + 1, cmds, executor);
+            map = InnerMap[cmdStr] = new CommandMap();
         }
-        else
+        var result =  map.register(idx + 1, cmds, executor);
+        if (!result)
         {
-            var map = InnerMap[cmdStr] = new CommandMap();
-            map.register(idx + 1, cmds, executor);
+            if (Cmds.TryGetValue(cmdStr, out var cmd))
+            {
+                cmd.executor = executor;
+                return true;
+            }
         }
+
+        return false;
     }
 }
